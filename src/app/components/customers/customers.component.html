@@ -1,0 +1,118 @@
+<app-page-header
+  title="customers"
+  icon="bi bi-emoji-expressionless-fill"
+  description="list of customers"
+></app-page-header>
+
+<div class="row mt-4">
+  <div class="col-3">
+    <div class="input-group flex-nowrap">
+      <span class="input-group-text btn btn-warning" id="addon-wrapping"
+        ><i class="bi bi-binoculars-fill"></i
+      ></span>
+      <input
+        [(ngModel)]="inputFN"
+        type="text"
+        class="form-control"
+        placeholder="Search by First name"
+        aria-label="Firstname"
+        aria-describedby="addon-wrapping"
+      />
+    </div>
+  </div>
+  <div class="col-3">
+    <div class="input-group flex-nowrap">
+      <span class="input-group-text btn btn-warning" id="addon-wrapping"
+        ><i class="bi bi-binoculars-fill"></i
+      ></span>
+      <input
+        [(ngModel)]="inputLN"
+        type="text"
+        class="form-control"
+        placeholder="Search by Last name"
+        aria-label="Lastname"
+        aria-describedby="addon-wrapping"
+      />
+    </div>
+  </div>
+  <div class="col-3">
+    <div class="input-group flex-nowrap">
+      <span class="input-group-text btn btn-warning" id="addon-wrapping"
+        ><i class="bi bi-binoculars-fill"></i
+      ></span>
+      <input
+        [(ngModel)]="inputPN"
+        type="text"
+        class="form-control"
+        placeholder="Search by Phone number"
+        aria-label="Phonenumber"
+        aria-describedby="addon-wrapping"
+      />
+    </div>
+  </div>
+  <div class="col-3">
+    <a routerLink="new" class="btn btn-dark">
+      <i class="bi bi-person-plus"> Add New Customer</i>
+    </a>
+  </div>
+</div>
+
+<div class="row mt-3">
+  <div *ngIf="customers$ | async as customers; else loading" class="col-12">
+    <div
+      *ngIf="
+        customers$
+          | async
+          | customersFilter: 'firstName':inputFN
+          | customersFilter: 'lastName':inputLN
+          | customersFilter: 'phone':inputPN as customers;
+        else loading
+      "
+    >
+      <table
+        *ngIf="customers.length; else noCustomers"
+        class="table table-bordered"
+      >
+        <thead>
+          <tr>
+            <th>#No.</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let customer of customers; index as idx">
+            <td>
+              {{ idx + 1 }}.
+              <a [routerLink]="['./', customer.id]">
+                <i class="bi bi-envelope-open me-3"></i>
+              </a>
+              <a [routerLink]="['./', customer.id, 'edit']">
+                <i class="bi bi-pencil-fill"> </i>
+              </a>
+              <a class="ms-3" (click)="remove(customer.id)">
+                <i class="bi bi-trash-fill"></i>
+              </a>
+            </td>
+            <td>
+              <a [routerLink]="['./', customer.id]">{{ customer.firstName }}</a>
+            </td>
+            <td>
+              <a [routerLink]="['./', customer.id]"> {{ customer.lastName }}</a>
+            </td>
+            <td>
+              <a [href]="'mailto:' + customer.email">{{ customer.email }}</a>
+            </td>
+            <td>
+              <a [href]="'tel:' + customer.phone">{{ customer.phone }}</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<ng-template #loading> loading... </ng-template>
+<ng-template #noCustomers>there is no such customer </ng-template>

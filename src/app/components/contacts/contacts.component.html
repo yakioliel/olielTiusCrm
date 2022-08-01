@@ -1,0 +1,50 @@
+<app-page-header
+  title="contacts"
+  icon="bi
+  bi-people-fill"
+  description="Company Employees Details"
+></app-page-header>
+
+<table
+  *ngIf="contacts.length; else noContact"
+  class="table table-bordered align-middle mt-3"
+>
+  <thead>
+    <tr>
+      <th>No.</th>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Birthday</th>
+      <th>Phones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let c of contacts; index as idx">
+      <td>{{ idx + 1 }}</td>
+      <td>{{ c.name | titlecase }}</td>
+      <td>
+        <a [href]="'mailto:' + c.email"> {{ c.email | lowercase }} </a>
+      </td>
+      <td>{{ c.birthday | date: "dd/MM/yyyy" }}</td>
+      <td>
+        <ul *ngIf="c.phones.length; else noPhones">
+          <li *ngFor="let p of c.phones">
+            <a [href]="'tel:' + p"> {{ p }} </a>
+          </li>
+        </ul>
+
+        <ng-template #noPhones
+          ><p>
+            <i> <strong> No Phones </strong> </i>
+          </p>
+        </ng-template>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<ng-template #noContact
+  ><p>
+    <i><strong>> No Contact </strong></i>
+  </p>
+</ng-template>
